@@ -5,7 +5,7 @@ from os import mkdir
 from os.path import isdir, isfile
 from pathlib import Path
 
-dir_path = str(Path(__file__).parents[2])
+dir_path = str(Path(__file__).parents[0])
 
 
 class CustomFormatter(logging.Formatter):
