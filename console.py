@@ -1,7 +1,7 @@
 import datetime
 import logging
 from logging import handlers
-from os import mkdir
+from os import mkdir, system
 from os.path import isdir, isfile
 from pathlib import Path
 
@@ -56,3 +56,7 @@ if perform_roll_over:
 logging.basicConfig(handlers=[logging.handlers.TimedRotatingFileHandler(filename)],
                     format='%(asctime)s - %(name)s - %(levelname)s: %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
+
+
+def clear_console():
+    system('clear')
