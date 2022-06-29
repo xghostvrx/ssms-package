@@ -1,7 +1,7 @@
 import datetime
 import logging
 from logging import handlers
-from os import mkdir, system
+from os import system, makedirs
 from os.path import isdir, isfile
 from pathlib import Path
 
@@ -42,12 +42,12 @@ ch.setFormatter(CustomFormatter())
 logger.addHandler(ch)
 
 # Check if a logs folder exists
-isDir = isdir(dir_path + '/logs')
-if not isDir == 1:
-    mkdir(str(dir_path + '/logs'))
+is_dir = isdir(dir_path + '/.ssms-package/logs')
+if not is_dir == 1:
+    makedirs(str(dir_path + '/.ssms-package/logs'))
 
 # Create a new log file for each new day and run
-filename = dir_path + '/logs/{:%Y-%m-%d}.log'.format(datetime.datetime.now())
+filename = dir_path + '/.ssms-package/logs/{:%Y-%m-%d}.log'.format(datetime.datetime.now())
 perform_roll_over = isfile(filename)
 ch = logging.handlers.RotatingFileHandler(filename, backupCount=25)
 if perform_roll_over:
