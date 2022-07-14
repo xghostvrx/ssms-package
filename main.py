@@ -2,6 +2,7 @@ from os.path import isfile
 from time import sleep
 
 from console import logger, dir_path
+from process import start
 from settings import configuration
 
 
@@ -36,9 +37,6 @@ def initialize():
             existing_config = input('Would you like to use the existing configuration (y/n): ')
             if any(existing_config.lower() == f for f in ['yes', 'y', '1']):
 
-                # Start workflow
-                # TODO: Add workflow start() function
-
                 break
 
             elif any(existing_config.lower() == f for f in ['no', 'n', '0']):
@@ -56,6 +54,11 @@ def initialize():
         sleep(1)
 
         new_config_prompt()
+
+    logger.info('Starting SSMS Package Workflow...')
+
+    # Start workflow
+    start()
 
 
 if __name__ == '__main__':

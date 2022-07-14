@@ -49,6 +49,7 @@ def save(miniconda,
 
     config.write(open(workspace + '/config.ini', 'w'))
 
+# TODO: Add a configuration prompt about metadata (after prompting for reads)
 
 def configuration():
     clear_console()
@@ -147,12 +148,12 @@ def configuration():
 
             logger.info('(' + run_name + ') has been specified as the run name.')
 
-            run = str(project_location + '/runs/' + run_name)
+            run = str(project_location + '/' + run_name)
             is_dir = isdir(run)
             if not is_dir == 1:
                 makedirs(run)
 
-            reads = str(project_location + '/reads/' + run_name)
+            reads = str(run + '/reads/')
             is_dir = isdir(reads)
             if not is_dir == 1:
                 makedirs(reads)
