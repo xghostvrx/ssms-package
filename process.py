@@ -1,8 +1,9 @@
+import subprocess
 from os import chdir, mkdir
 from os.path import isdir
 from time import sleep
 
-from console import clear_console, logger
+from console import clear_console, logger, dir_path
 from settings import config
 
 
@@ -54,4 +55,26 @@ def start():
     else:
         terminate_process()
 
+    chdir(dir_path)
+
     sleep(3)
+
+    # Quality control
+    logger.info('Running raw sequence read(s) through quality control...')
+
+    is_dir = isdir(dir_path + '/.ssms-package/conda/fastqc')
+    if not is_dir == 1:
+        subprocess.run(f'conda env create -f envs/fastqc.yml --prefix {workspace}/.ssms-package/conda/fastqc',
+                       shell=True, executable='/bin/bash')
+
+    subprocess.run(f'conda run --prefix {workspace}/.ssms-package/conda/fastqc python=3 python3 subprocesses/fastqc.py',
+                   shell=True, executable='/bin/bash')
+
+    is_dir = isdir(dir_path + '/.ssms-package/conda/multiqc')
+    if not is_dir == 1:
+        subprocess.run(f'conda env create -f envs/multiqc.yml --prefix {workspace}/.ssms-package/conda/multiqc',
+                       shell=True, executable='/bin/bash')
+
+    subprocess.run(
+        f'conda run --prefix {workspace}/.ssms-package/conda/multiqc python=3 python3 subprocesses/multiqc.py',
+        shell=True, executable='/bin/bash')
