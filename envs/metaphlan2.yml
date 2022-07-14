@@ -1,0 +1,7 @@
+name: metaphlan2
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - metaphlan2=2.96.1

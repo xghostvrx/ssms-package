@@ -1,0 +1,7 @@
+name: hclust2
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - hclust2=1.0.0
