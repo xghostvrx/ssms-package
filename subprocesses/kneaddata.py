@@ -1,5 +1,8 @@
+import re
+import subprocess
 from glob import iglob
 from os import chdir, mkdir, getcwd
+from os.path import basename
 from shutil import move
 
 from console import dir_path
@@ -19,48 +22,42 @@ trimmer_database = config['Databases']['trimmer_database']
 # Change into working directory
 chdir(run)
 
-# # Check if output folders exist
-# is_dir = isdir('results/logs')
-# if is_dir == 1:
-#     logger.warning('Skipping quality control for inputted sequence read(s)...')
-#     exit()
-#
-# # Run kneaddata
-# for filename in iglob(f'{reads}/*_R1_*.fastq.gz'):
-#
-#     filename = basename(filename)
-#     sampleid = re.findall('^(.+?(?=_))', filename)[0]
-#     barcode = re.findall('([0-9][0-9]+?(?=_L))', filename)[0]
-#     lane = re.findall('(L[0-9][0-9]+?(?=_R))', filename)[0]
-#     direction = re.findall('(R[0-2]+?(?=_))', filename)[0]
-#     set = re.findall('R[0-2]_([0-9][0-9][0-9])', filename)[0]
-#
-#     if read_type == 'paired':
-#
-#         subprocess.run(['kneaddata',
-#                         '--input', f'{reads}/{sampleid}_{barcode}_{lane}_R1_{set}.fastq.gz',
-#                         '--input', f'{reads}/{sampleid}_{barcode}_{lane}_R2_{set}.fastq.gz',
-#                         '--trimmomatic', f'{dir_path}/.ssms-package/conda/kneaddata/share/trimmomatic-0.39-2',
-#                         f'--trimmomatic-options="{trimmomatic_options}"',
-#                         '--reference-db', f'{trimmer_database}',
-#                         '--max-memory', '40g', '-p', '8', '-t', '8',
-#                         '--output-prefix', f'{sampleid}',
-#                         '--output', f'{run}/results'])
-#
-#         break
-#
-#     elif read_type == 'single':
-#
-#         subprocess.run(['kneaddata',
-#                         '--input', f'{reads}/{sampleid}_{barcode}_{lane}_R1_{set}.fastq.gz',
-#                         '--trimmomatic', f'{dir_path}/.ssms-package/conda/kneaddata/share/trimmomatic-0.39-2',
-#                         f'--trimmomatic-options="{trimmomatic_options}"',
-#                         '--reference-db', f'{trimmer_database}',
-#                         '--max-memory', '40g', '-p', '8', '-t', '8',
-#                         '--output-prefix', f'{sampleid}',
-#                         '--output', f'{run}/results'])
-#
-#         break
+# Run kneaddata
+for filename in iglob(f'{reads}/*_R1_*.fastq.gz'):
+
+    filename = basename(filename)
+    sampleid = re.findall('^(.+?(?=_))', filename)[0]
+    barcode = re.findall('([0-9][0-9]+?(?=_L))', filename)[0]
+    lane = re.findall('(L[0-9][0-9]+?(?=_R))', filename)[0]
+    direction = re.findall('(R[0-2]+?(?=_))', filename)[0]
+    set = re.findall('R[0-2]_([0-9][0-9][0-9])', filename)[0]
+
+    if read_type == 'paired':
+
+        subprocess.run(['kneaddata',
+                        '--input', f'{reads}/{sampleid}_{barcode}_{lane}_R1_{set}.fastq.gz',
+                        '--input', f'{reads}/{sampleid}_{barcode}_{lane}_R2_{set}.fastq.gz',
+                        '--trimmomatic', f'{dir_path}/.ssms-package/conda/kneaddata/share/trimmomatic-0.39-2',
+                        f'--trimmomatic-options="{trimmomatic_options}"',
+                        '--reference-db', f'{trimmer_database}',
+                        '--max-memory', '40g', '-p', '8', '-t', '8',
+                        '--output-prefix', f'{sampleid}',
+                        '--output', f'{run}/results'])
+
+        break
+
+    elif read_type == 'single':
+
+        subprocess.run(['kneaddata',
+                        '--input', f'{reads}/{sampleid}_{barcode}_{lane}_R1_{set}.fastq.gz',
+                        '--trimmomatic', f'{dir_path}/.ssms-package/conda/kneaddata/share/trimmomatic-0.39-2',
+                        f'--trimmomatic-options="{trimmomatic_options}"',
+                        '--reference-db', f'{trimmer_database}',
+                        '--max-memory', '40g', '-p', '8', '-t', '8',
+                        '--output-prefix', f'{sampleid}',
+                        '--output', f'{run}/results'])
+
+        break
 
 chdir('results')
 

@@ -5,4 +5,3 @@ channels:
   - defaults
 dependencies:
   - fastqc=0.11.9
-prefix: /Users/Metro1102/Workspace/repos/ssms-package/.ssms-package/conda

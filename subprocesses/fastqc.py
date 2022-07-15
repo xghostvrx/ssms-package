@@ -1,8 +1,8 @@
 import subprocess
-from os import chdir, makedirs
+from os import chdir
 from os.path import isdir
 
-from console import dir_path, logger
+from console import dir_path
 from settings import config
 
 # Retrieve configuration variable(s)
@@ -14,14 +14,11 @@ run = config['Run Settings']['run']
 # Change into working directory
 chdir(run)
 
-# Check if output folders exist
-is_dir = isdir('reports/fastqc/before_trimming')
-if is_dir == 1:
-    logger.warning('Skipping quality control (fastqc) for raw sequence read(s)...')
-    exit()
-else:
-    makedirs('reports/fastqc/before_trimming')
-
 # Run fastqc
-subprocess.run(f'fastqc -t 8 reads/*.fastq.gz -outdir=reports/fastqc/before_trimming',
-               shell=True, executable='/bin/bash')
+is_dir = isdir('results/reads')
+if is_dir == 1:
+    subprocess.run(f'fastqc -t 8 results/reads/*.fastq -outdir=reports/fastqc/after_trimming',
+                   shell=True, executable='/bin/bash')
+else:
+    subprocess.run(f'fastqc -t 8 reads/*.fastq.gz -outdir=reports/fastqc/before_trimming',
+                   shell=True, executable='/bin/bash')

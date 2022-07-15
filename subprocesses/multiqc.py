@@ -1,8 +1,8 @@
 import subprocess
-from os import chdir, makedirs
+from os import chdir
 from os.path import isdir
 
-from console import dir_path, logger
+from console import dir_path
 from settings import config
 
 # Retrieve configuration variable(s)
@@ -13,13 +13,9 @@ run = config['Run Settings']['run']
 # Change into working directory
 chdir(run)
 
-# Check if output folders exist
-is_dir = isdir('reports/multiqc/before_trimming')
-if is_dir == 1:
-    logger.warning('Skipping quality control (multiqc) for raw sequence read(s)...')
-    exit()
-else:
-    makedirs('reports/multiqc/before_trimming')
-
 # Run multiqc
-subprocess.run(['multiqc', 'reports/fastqc/before_trimming', '--outdir=reports/multiqc/before_trimming'])
+is_dir = isdir('reports/fastqc/after_trimming')
+if is_dir == 1:
+    subprocess.run(['multiqc', 'reports/fastqc/after_trimming', '--outdir=reports/multiqc/after_trimming'])
+else:
+    subprocess.run(['multiqc', 'reports/fastqc/before_trimming', '--outdir=reports/multiqc/before_trimming'])

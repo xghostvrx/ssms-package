@@ -1,5 +1,5 @@
 import subprocess
-from os import chdir, mkdir
+from os import chdir, mkdir, makedirs
 from os.path import isdir
 from time import sleep
 
@@ -55,35 +55,99 @@ def start():
     else:
         terminate_process()
 
-    chdir(dir_path)
+    # chdir(dir_path)
 
     sleep(3)
 
-    # Quality control
+    # Quality control (RAW)
     logger.info('Running raw sequence read(s) through quality control...')
 
-    is_dir = isdir(dir_path + '/.ssms-package/conda/fastqc')
-    if not is_dir == 1:
-        subprocess.run(f'conda env create -f envs/fastqc.yml --prefix {dir_path}/.ssms-package/conda/fastqc',
-                       shell=True, executable='/bin/bash')
+    sleep(3)
 
-    subprocess.run(f'conda run --prefix {dir_path}/.ssms-package/conda/fastqc python=3 python3 subprocesses/fastqc.py',
-                   shell=True, executable='/bin/bash')
+    is_dir = isdir('reports/fastqc/before_trimming')
+    if is_dir == 1:
+        logger.warning('Skipping quality control (fastqc) for raw sequence read(s)...')
+    else:
+        makedirs('reports/fastqc/before_trimming')
 
-    is_dir = isdir(dir_path + '/.ssms-package/conda/multiqc')
-    if not is_dir == 1:
-        subprocess.run(f'conda env create -f envs/multiqc.yml --prefix {dir_path}/.ssms-package/conda/multiqc',
-                       shell=True, executable='/bin/bash')
+        chdir(dir_path)
 
-    subprocess.run(
-        f'conda run --prefix {dir_path}/.ssms-package/conda/multiqc python=3 python3 subprocesses/multiqc.py',
-        shell=True, executable='/bin/bash')
+        is_dir = isdir(dir_path + '/.ssms-package/conda/fastqc')
+        if not is_dir == 1:
+            subprocess.run(f'conda env create -f envs/fastqc.yml --prefix {dir_path}/.ssms-package/conda/fastqc',
+                           shell=True, executable='/bin/bash')
 
-    is_dir = isdir(dir_path + '/.ssms-package/conda/kneaddata')
-    if not is_dir == 1:
-        subprocess.run(f'conda env create -f envs/kneaddata.yml --prefix {dir_path}/.ssms-package/conda/kneaddata',
-                       shell=True, executable='/bin/bash')
+        subprocess.run(
+            f'conda run --prefix {dir_path}/.ssms-package/conda/fastqc python=3 python3 subprocesses/fastqc.py',
+            shell=True, executable='/bin/bash')
 
-    subprocess.run(
-        f'conda run --prefix {dir_path}/.ssms-package/conda/kneaddata python=3 python3 subprocesses/kneaddata.py',
-        shell=True, executable='/bin/bash')
+    sleep(3)
+
+    is_dir = isdir('reports/multiqc/before_trimming')
+    if is_dir == 1:
+        logger.warning('Skipping quality control (multiqc) for raw sequence read(s)...')
+    else:
+        makedirs('reports/multiqc/before_trimming')
+
+        chdir(dir_path)
+
+        is_dir = isdir(dir_path + '/.ssms-package/conda/multiqc')
+        if not is_dir == 1:
+            subprocess.run(f'conda env create -f envs/multiqc.yml --prefix {dir_path}/.ssms-package/conda/multiqc',
+                           shell=True, executable='/bin/bash')
+
+        subprocess.run(
+            f'conda run --prefix {dir_path}/.ssms-package/conda/multiqc python=3 python3 subprocesses/multiqc.py',
+            shell=True, executable='/bin/bash')
+
+    sleep(3)
+
+    is_dir = isdir('results/reads')
+    if is_dir == 1:
+        logger.warning('Skipping quality control (kneaddata) for raw sequence read(s)...')
+    else:
+        chdir(dir_path)
+
+        is_dir = isdir(dir_path + '/.ssms-package/conda/kneaddata')
+        if not is_dir == 1:
+            subprocess.run(f'conda env create -f envs/kneaddata.yml --prefix {dir_path}/.ssms-package/conda/kneaddata',
+                           shell=True, executable='/bin/bash')
+
+        subprocess.run(
+            f'conda run --prefix {dir_path}/.ssms-package/conda/kneaddata python=3 python3 subprocesses/kneaddata.py',
+            shell=True, executable='/bin/bash')
+
+    sleep(3)
+
+    # Quality control (CLEAN)
+    logger.info('Running clean sequence read(s) through quality control...')
+
+    sleep(3)
+
+    is_dir = isdir('reports/fastqc/after_trimming')
+    if is_dir == 1:
+        logger.warning('Skipping quality control (fastqc) for clean sequence read(s)...')
+    else:
+        makedirs('reports/fastqc/after_trimming')
+
+        chdir(dir_path)
+
+        subprocess.run(
+            f'conda run --prefix {dir_path}/.ssms-package/conda/fastqc python=3 python3 subprocesses/fastqc.py',
+            shell=True, executable='/bin/bash')
+
+    sleep(3)
+
+    is_dir = isdir('reports/multiqc/after_trimming')
+    if is_dir == 1:
+        logger.warning('Skipping quality control (multiqc) for clean sequence read(s)...')
+    else:
+        makedirs('reports/multiqc/after_trimming')
+
+        chdir(dir_path)
+
+        subprocess.run(
+            f'conda run --prefix {dir_path}/.ssms-package/conda/multiqc python=3 python3 subprocesses/multiqc.py',
+            shell=True, executable='/bin/bash')
+
+    sleep(3)
