@@ -151,3 +151,23 @@ def start():
             shell=True, executable='/bin/bash')
 
     sleep(3)
+
+    # kraken2
+    logger.info('Running clean sequence read(s) through kraken2...')
+
+    is_dir = isdir('reports/kraken2') or isdir('results/kraken2')
+    if is_dir == 1:
+        logger.warning('Skipping kraken2 for clean sequence read(s)...')
+    else:
+        makedirs('reports/kraken2')
+
+        chdir(dir_path)
+
+        is_dir = isdir(dir_path + '/.ssms-package/conda/kraken2')
+        if not is_dir == 1:
+            subprocess.run(f'conda env create -f envs/kraken2.yml --prefix {dir_path}/.ssms-package/conda/kraken2',
+                           shell=True, executable='/bin/bash')
+
+        subprocess.run(
+            f'conda run --prefix {dir_path}/.ssms-package/conda/kraken2 python=3 python3 subprocesses/kraken2.py',
+            shell=True, executable='/bin/bash')
