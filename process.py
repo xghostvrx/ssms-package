@@ -64,17 +64,26 @@ def start():
 
     is_dir = isdir(dir_path + '/.ssms-package/conda/fastqc')
     if not is_dir == 1:
-        subprocess.run(f'conda env create -f envs/fastqc.yml --prefix {workspace}/.ssms-package/conda/fastqc',
+        subprocess.run(f'conda env create -f envs/fastqc.yml --prefix {dir_path}/.ssms-package/conda/fastqc',
                        shell=True, executable='/bin/bash')
 
-    subprocess.run(f'conda run --prefix {workspace}/.ssms-package/conda/fastqc python=3 python3 subprocesses/fastqc.py',
+    subprocess.run(f'conda run --prefix {dir_path}/.ssms-package/conda/fastqc python=3 python3 subprocesses/fastqc.py',
                    shell=True, executable='/bin/bash')
 
     is_dir = isdir(dir_path + '/.ssms-package/conda/multiqc')
     if not is_dir == 1:
-        subprocess.run(f'conda env create -f envs/multiqc.yml --prefix {workspace}/.ssms-package/conda/multiqc',
+        subprocess.run(f'conda env create -f envs/multiqc.yml --prefix {dir_path}/.ssms-package/conda/multiqc',
                        shell=True, executable='/bin/bash')
 
     subprocess.run(
-        f'conda run --prefix {workspace}/.ssms-package/conda/multiqc python=3 python3 subprocesses/multiqc.py',
+        f'conda run --prefix {dir_path}/.ssms-package/conda/multiqc python=3 python3 subprocesses/multiqc.py',
+        shell=True, executable='/bin/bash')
+
+    is_dir = isdir(dir_path + '/.ssms-package/conda/kneaddata')
+    if not is_dir == 1:
+        subprocess.run(f'conda env create -f envs/kneaddata.yml --prefix {dir_path}/.ssms-package/conda/kneaddata',
+                       shell=True, executable='/bin/bash')
+
+    subprocess.run(
+        f'conda run --prefix {dir_path}/.ssms-package/conda/kneaddata python=3 python3 subprocesses/kneaddata.py',
         shell=True, executable='/bin/bash')
