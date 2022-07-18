@@ -155,7 +155,7 @@ def start():
     # kraken2
     logger.info('Running clean sequence read(s) through kraken2...')
 
-    is_dir = isdir('reports/kraken2') or isdir('results/kraken2')
+    is_dir = isdir('reports/kraken2')
     if is_dir == 1:
         logger.warning('Skipping kraken2 for clean sequence read(s)...')
     else:
@@ -170,4 +170,24 @@ def start():
 
         subprocess.run(
             f'conda run --prefix {dir_path}/.ssms-package/conda/kraken2 python=3 python3 subprocesses/kraken2.py',
+            shell=True, executable='/bin/bash')
+
+    # bracken
+    logger.info('Running clean sequence read(s) through bracken...')
+
+    is_dir = isdir('reports/kraken2/bracken')
+    if is_dir == 1:
+        logger.warning('Skipping bracken for clean sequence read(s)...')
+    else:
+        makedirs('reports/kraken2/bracken')
+
+        chdir(dir_path)
+
+        is_dir = isdir(dir_path + '/.ssms-package/conda/bracken')
+        if not is_dir == 1:
+            subprocess.run(f'conda env create -f envs/bracken.yml --prefix {dir_path}/.ssms-package/conda/bracken',
+                           shell=True, executable='/bin/bash')
+
+        subprocess.run(
+            f'conda run --prefix {dir_path}/.ssms-package/conda/bracken python=3 python3 subprocesses/bracken.py',
             shell=True, executable='/bin/bash')
