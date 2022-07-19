@@ -16,6 +16,7 @@ def save(miniconda,
          run_name,
          run,
          reads,
+         metadata,
          read_type,
          trimmer,
          trimmomatic_options,
@@ -37,6 +38,7 @@ def save(miniconda,
     config['Run Settings'] = {'run_name': run_name,
                               'run': run,
                               'reads': reads,
+                              'metadata': metadata,
                               'read_type': read_type,
                               'trimmer': trimmer,
                               'trimmomatic_options': trimmomatic_options,
@@ -49,7 +51,6 @@ def save(miniconda,
 
     config.write(open(workspace + '/config.ini', 'w'))
 
-# TODO: Add a configuration prompt about metadata (after prompting for reads)
 
 def configuration():
     clear_console()
@@ -188,10 +189,37 @@ def configuration():
                         else:
                             clear_console()
                             print('Please enter yes or no.')
+
                     break
                 elif any(answer.lower() == f for f in ['no', 'n', '0']):
                     clear_console()
                     print('Please move your read(s) to the specified location.')
+                else:
+                    clear_console()
+                    print('Please enter yes or no.')
+
+            while True:
+                print('Please move a metadata file into the following location: ' + run)
+                answer = input('Confirm once this has been done (y/n): ')
+                if any(answer.lower() == f for f in ['yes', 'y', '1']):
+                    logger.info('The user has confirmed that their metadata have been moved to (' + run + ').')
+
+                    sleep(3)
+
+                    answer = input('Enter the filename of the metadata file (ex. metadata_name.txt): ')
+                    metadata = run + '/' + answer
+                    is_file = isfile(metadata)
+                    if is_file == 1:
+                        logger.info('(' + metadata + ') has been specified as the metadata.')
+                        sleep(3)
+                        break
+                    else:
+                        clear_console()
+                        logger.error('The metadata file (' + metadata + ') does not exist.')
+                        print('Please enter the filename of the metadata file.')
+                elif any(answer.lower() == f for f in ['no', 'n', '0']):
+                    clear_console()
+                    print('Please move your metadata file to the specified location.')
                 else:
                     clear_console()
                     print('Please enter yes or no.')
@@ -344,7 +372,7 @@ def configuration():
                 print('Please enter the filename of the adapter file.')
         elif any(answer.lower() == f for f in ['no', 'n', '0']):
             clear_console()
-            logger.critical('The user has not moved an adapter file to (' + adapter + ').')
+            print('Please move an adapter file to (' + adapter + ').')
         else:
             clear_console()
             print('Please enter yes or no.')
@@ -357,6 +385,7 @@ def configuration():
                 run_name,
                 run,
                 reads,
+                metadata,
                 read_type,
                 trimmer,
                 trimmomatic_options,
