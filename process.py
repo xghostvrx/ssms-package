@@ -42,18 +42,22 @@ def start():
     reads = config['Run Settings']['reads']
     is_dir = isdir(reads)
     if is_dir == 1:
+        # Determine if a metadata file exists
+        metadata = config['Run Settings']['metadata']
+        is_file = isfile(metadata)
+        if is_file == 1:
 
-        # If directory exists, do the following:
-        chdir(run)
+            chdir(run)
 
-        is_dir = isdir('results')
-        if not is_dir == 1:
-            mkdir('results')
+            is_dir = isdir('results')
+            if not is_dir == 1:
+                mkdir('results')
 
-        is_dir = isdir('reports')
-        if not is_dir == 1:
-            mkdir('reports')
-
+            is_dir = isdir('reports')
+            if not is_dir == 1:
+                mkdir('reports')
+        else:
+            terminate_process()
     else:
         terminate_process()
 
