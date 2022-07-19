@@ -1,6 +1,6 @@
 import subprocess
 from os import chdir, mkdir, makedirs
-from os.path import isdir
+from os.path import isdir, isfile
 from time import sleep
 
 from console import clear_console, logger, dir_path
@@ -18,6 +18,8 @@ def start():
         exit()
 
     config.read('workspace/config.ini')
+    project_name = config['Project Settings']['project_name']
+    run_name = config['Run Settings']['run_name']
 
     # Determine if a workspace exists (if not terminate)
     workspace = config['General Settings']['workspace']
@@ -190,4 +192,22 @@ def start():
 
         subprocess.run(
             f'conda run --prefix {dir_path}/.ssms-package/conda/bracken python=3 python3 subprocesses/bracken.py',
+            shell=True, executable='/bin/bash')
+
+    # kraken-biom
+
+    is_file = isfile(f'{project_name}-{run_name}-kraken2-results.biom') or isfile(
+        f'{project_name}-{run_name}-bracken-results.biom')
+    if is_file == 1:
+        logger.warning('Skipping biom for clean sequence read(s)...')
+    else:
+        chdir(dir_path)
+
+        is_dir = isdir(dir_path + '/.ssms-package/conda/kraken-biom')
+        if not is_dir == 1:
+            subprocess.run(
+                f'conda env create -f envs/kraken-biom.yml --prefix {dir_path}/.ssms-package/conda/kraken-biom',
+                shell=True, executable='/bin/bash')
+        subprocess.run(
+            f'conda run --prefix {dir_path}/.ssms-package/conda/kraken-biom python=3 python3 subprocesses/kraken-biom.py',
             shell=True, executable='/bin/bash')
