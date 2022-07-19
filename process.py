@@ -1,6 +1,7 @@
 import subprocess
 from os import chdir, mkdir, makedirs
 from os.path import isdir, isfile
+from sys import platform
 from time import sleep
 
 from console import clear_console, logger, dir_path
@@ -199,9 +200,7 @@ def start():
             shell=True, executable='/bin/bash')
 
     # kraken-biom
-
-    is_file = isfile(f'{project_name}-{run_name}-kraken2-results.biom') or isfile(
-        f'{project_name}-{run_name}-bracken-results.biom')
+    is_file = isfile(f'{project_name}-{run_name}-kraken2-results.biom')
     if is_file == 1:
         logger.warning('Skipping biom for clean sequence read(s)...')
     else:
@@ -214,4 +213,28 @@ def start():
                 shell=True, executable='/bin/bash')
         subprocess.run(
             f'conda run --prefix {dir_path}/.ssms-package/conda/kraken-biom python=3 python3 subprocesses/kraken-biom.py',
+            shell=True, executable='/bin/bash')
+
+    # qiime2
+    is_file = isfile(f'{project_name}-{run_name}-kraken-taxa-barplot.qzv')
+    if is_file == 1:
+        logger.warning('Skipping qiime2 for clean sequence read(s)...')
+    else:
+        chdir(dir_path)
+
+        is_dir = isdir(dir_path + '/.ssms-package/conda/qiime2')
+        if not is_dir == 1:
+            if platform == "linux" or platform == "linux2":
+                # Linux
+                subprocess.run(
+                    f'conda env create -f envs/qiime2-linux.yml --prefix {dir_path}/.ssms-package/conda/qiime2',
+                    shell=True, executable='/bin/bash')
+            elif platform == "darwin":
+                # MacOS (TODO: Note potential issues with Apple Silicon in documents.)
+                subprocess.run(
+                    f'conda env create -f envs/qiime2-macos.yml --prefix {dir_path}/.ssms-package/conda/qiime2',
+                    shell=True, executable='/bin/bash')
+
+        subprocess.run(
+            f'conda run --prefix {dir_path}/.ssms-package/conda/qiime2 python=3 python3 subprocesses/qiime2.py',
             shell=True, executable='/bin/bash')
