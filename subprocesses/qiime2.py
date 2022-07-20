@@ -14,6 +14,7 @@ config.read(workspace + '/config.ini')
 run = config['Run Settings']['run']
 project_name = config['Project Settings']['project_name']
 run_name = config['Run Settings']['run_name']
+metadata = config['Run Settings']['metadata']
 
 # Change into working directory
 chdir(run)
@@ -23,23 +24,23 @@ def plot_kraken():
     # All biological domains
     subprocess.run(['qiime', 'tools', 'import',
                     '--input-path', f'{project_name}-{run_name}-kraken2-results.biom',
-                    '--type', "'FeatureTable[Frequency]'",
+                    '--type', 'FeatureTable[Frequency]',
                     '--input-format', 'BIOMV100Format',
                     '--output-path', f'{project_name}-{run_name}-kraken2-table.qza'])
     subprocess.run(['biom', 'convert',
                     '-i', f'{project_name}-{run_name}-kraken2-results.biom',
                     '-o', f'{project_name}-{run_name}-kraken2-hdf5-table.biom',
-                    '--table-type', '"OTU table"',
+                    '--table-type', 'OTU table',
                     '--to-hdf5'])
     subprocess.run(['qiime', 'tools', 'import',
                     '--input-path', f'{project_name}-{run_name}-kraken2-hdf5-table.biom',
-                    '--type', "'FeatureData[Taxonomy]'",
+                    '--type', 'FeatureData[Taxonomy]',
                     '--input-format', 'BIOMV210Format',
                     '--output-path', f'{project_name}-{run_name}-kraken2-taxonomy.qza'])
     subprocess.run(['qiime', 'taxa', 'barplot',
                     '--i-table', f'{project_name}-{run_name}-kraken2-table.qza',
                     '--i-taxonomy', f'{project_name}-{run_name}-kraken2-taxonomy.qza',
-                    '--m-metadata-file', f'',
+                    '--m-metadata-file', f'{metadata}',
                     '--o-visualization', f'{project_name}-{run_name}-kraken2-taxa-barplot.qzv'])
     # Filter for bacteria only
     subprocess.run(['qiime', 'taxa', 'filter-table',
@@ -50,7 +51,7 @@ def plot_kraken():
     subprocess.run(['qiime', 'taxa', 'barplot',
                     '--i-table', f'{project_name}-{run_name}-kraken2-table-bacteria.qza',
                     '--i-taxonomy', f'{project_name}-{run_name}-kraken2-taxonomy.qza',
-                    '--m-metadata-file', f'',
+                    '--m-metadata-file', f'{metadata}',
                     '--o-visualization', f'{project_name}-{run_name}-kraken2-taxa-barplot-bacteria.qzv'])
 
 
@@ -58,23 +59,23 @@ def plot_bracken():
     # All biological domains
     subprocess.run(['qiime', 'tools', 'import',
                     '--input-path', f'{project_name}-{run_name}-bracken-results.biom',
-                    '--type', "'FeatureTable[Frequency]'",
+                    '--type', 'FeatureTable[Frequency]',
                     '--input-format', 'BIOMV100Format',
                     '--output-path', f'{project_name}-{run_name}-bracken-table.qza'])
     subprocess.run(['biom', 'convert',
                     '-i', f'{project_name}-{run_name}-bracken-results.biom',
                     '-o', f'{project_name}-{run_name}-bracken-hdf5-table.biom',
-                    '--table-type', '"OTU table"',
+                    '--table-type', 'OTU table',
                     '--to-hdf5'])
     subprocess.run(['qiime', 'tools', 'import',
                     '--input-path', f'{project_name}-{run_name}-bracken-hdf5-table.biom',
-                    '--type', "'FeatureData[Taxonomy]'",
+                    '--type', 'FeatureData[Taxonomy]',
                     '--input-format', 'BIOMV210Format',
                     '--output-path', f'{project_name}-{run_name}-bracken-taxonomy.qza'])
     subprocess.run(['qiime', 'taxa', 'barplot',
                     '--i-table', f'{project_name}-{run_name}-bracken-table.qza',
                     '--i-taxonomy', f'{project_name}-{run_name}-bracken-taxonomy.qza',
-                    '--m-metadata-file', f'',
+                    '--m-metadata-file', f'{metadata}',
                     '--o-visualization', f'{project_name}-{run_name}-bracken-taxa-barplot.qzv'])
     # Filter for bacteria only
     subprocess.run(['qiime', 'taxa', 'filter-table',
@@ -85,7 +86,7 @@ def plot_bracken():
     subprocess.run(['qiime', 'taxa', 'barplot',
                     '--i-table', f'{project_name}-{run_name}-bracken-table-bacteria.qza',
                     '--i-taxonomy', f'{project_name}-{run_name}-bracken-taxonomy.qza',
-                    '--m-metadata-file', f'',
+                    '--m-metadata-file', f'{metadata}',
                     '--o-visualization', f'{project_name}-{run_name}-bracken-taxa-barplot-bacteria.qzv'])
 
 

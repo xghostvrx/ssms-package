@@ -89,6 +89,7 @@ def start():
             shell=True, executable='/bin/bash')
 
     sleep(3)
+    chdir(run)
 
     is_dir = isdir('reports/multiqc/before_trimming')
     if is_dir == 1:
@@ -108,6 +109,7 @@ def start():
             shell=True, executable='/bin/bash')
 
     sleep(3)
+    chdir(run)
 
     is_dir = isdir('results/reads')
     if is_dir == 1:
@@ -125,6 +127,7 @@ def start():
             shell=True, executable='/bin/bash')
 
     sleep(3)
+    chdir(run)
 
     # Quality control (CLEAN)
     logger.info('Running clean sequence read(s) through quality control...')
@@ -144,6 +147,7 @@ def start():
             shell=True, executable='/bin/bash')
 
     sleep(3)
+    chdir(run)
 
     is_dir = isdir('reports/multiqc/after_trimming')
     if is_dir == 1:
@@ -158,6 +162,7 @@ def start():
             shell=True, executable='/bin/bash')
 
     sleep(3)
+    chdir(run)
 
     # kraken2
     logger.info('Running clean sequence read(s) through kraken2...')
@@ -179,6 +184,9 @@ def start():
             f'conda run --prefix {dir_path}/.ssms-package/conda/kraken2 python=3 python3 subprocesses/kraken2.py',
             shell=True, executable='/bin/bash')
 
+    sleep(3)
+    chdir(run)
+
     # bracken
     logger.info('Running clean sequence read(s) through bracken...')
 
@@ -199,6 +207,9 @@ def start():
             f'conda run --prefix {dir_path}/.ssms-package/conda/bracken python=3 python3 subprocesses/bracken.py',
             shell=True, executable='/bin/bash')
 
+    sleep(3)
+    chdir(run)
+
     # kraken-biom
     is_file = isfile(f'{project_name}-{run_name}-kraken2-results.biom')
     if is_file == 1:
@@ -214,6 +225,9 @@ def start():
         subprocess.run(
             f'conda run --prefix {dir_path}/.ssms-package/conda/kraken-biom python=3 python3 subprocesses/kraken-biom.py',
             shell=True, executable='/bin/bash')
+
+    sleep(3)
+    chdir(run)
 
     # qiime2
     is_file = isfile(f'{project_name}-{run_name}-kraken-taxa-barplot.qzv')
