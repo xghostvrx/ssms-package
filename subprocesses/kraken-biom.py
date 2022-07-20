@@ -1,3 +1,4 @@
+import re
 import subprocess
 import sys
 from glob import iglob, glob
@@ -26,8 +27,8 @@ def export_kraken2():
         mkdir('temp')
 
     for filename in iglob(f'*_report.txt'):
-        basename = path.basename(filename)
-        copy(f'{filename}', f'temp/{basename}')
+        sampleid = re.findall('^(.+?(?=_))', filename)[0]
+        copy(f'{filename}', f'temp/{sampleid}.txt')
         break
 
     chdir('temp')
@@ -60,18 +61,18 @@ def export_bracken():
 
     if glob('*_species_report.txt'):
         for filename in iglob('*_species_report.txt'):
-            basename = path.basename(filename)
-            copy(f'{filename}', f'temp/{basename}')
+            sampleid = re.findall('^(.+?(?=_))', filename)[0]
+            copy(f'{filename}', f'temp/{sampleid}.txt')
             break
     elif glob('*_genus_report.txt'):
         for filename in iglob('*_genus_report.txt'):
-            basename = path.basename(filename)
-            copy(f'{filename}', f'temp/{basename}')
+            sampleid = re.findall('^(.+?(?=_))', filename)[0]
+            copy(f'{filename}', f'temp/{sampleid}.txt')
             break
     elif glob('*_phylum_report.txt'):
         for filename in iglob('*_phylum_report.txt'):
-            basename = path.basename(filename)
-            copy(f'{filename}', f'temp/{basename}')
+            sampleid = re.findall('^(.+?(?=_))', filename)[0]
+            copy(f'{filename}', f'temp/{sampleid}.txt')
             break
 
     chdir('temp')
