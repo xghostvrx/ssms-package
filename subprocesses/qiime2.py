@@ -1,6 +1,10 @@
 import subprocess
+import sys
 from os import chdir, mkdir
+from os.path import dirname, realpath
 from shutil import move
+
+sys.path.append(dirname(dirname(realpath(__file__))))
 
 from console import dir_path
 from settings import config

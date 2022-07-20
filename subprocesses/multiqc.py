@@ -1,6 +1,9 @@
 import subprocess
+import sys
 from os import chdir
-from os.path import isdir
+from os.path import dirname, realpath, isdir
+
+sys.path.append(dirname(dirname(realpath(__file__))))
 
 from console import dir_path
 from settings import config

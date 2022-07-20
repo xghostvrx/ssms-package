@@ -1,8 +1,11 @@
 import re
 import subprocess
+import sys
 from glob import iglob
 from os import chdir
-from os.path import basename
+from os.path import dirname, realpath, basename
+
+sys.path.append(dirname(dirname(realpath(__file__))))
 
 from console import dir_path
 from settings import config

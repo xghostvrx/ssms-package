@@ -1,8 +1,11 @@
 import subprocess
+import sys
 from glob import iglob, glob
 from os import chdir, mkdir, getcwd, rename
 from os import path
 from shutil import copy, move, rmtree
+
+sys.path.append(path.dirname(path.dirname(path.realpath(__file__))))
 
 from console import dir_path
 from settings import config
