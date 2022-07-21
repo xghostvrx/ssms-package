@@ -6,6 +6,8 @@ others.
 > A prospective bioinformatics project lead by [George Testo](https://github.com/metro1102); started as a part of
 > the [2021 Helios Program](https://www.tgen.org/education/helios-scholars-at-tgen/).
 
+![Imgur](https://i.imgur.com/DNQ0idS.png)
+
 ## Project Information
 
 Next-generation sequencing (NGS) has become a powerful tool for human microbiome research. We can now isolate bacterial
